@@ -1,89 +1,86 @@
-# TPH-YOLOv5
-This repo is the implementation of ["TPH-YOLOv5: Improved YOLOv5 Based on Transformer Prediction Head for Object Detection on Drone-Captured Scenarios"](https://openaccess.thecvf.com/content/ICCV2021W/VisDrone/html/Zhu_TPH-YOLOv5_Improved_YOLOv5_Based_on_Transformer_Prediction_Head_for_Object_ICCVW_2021_paper.html) and ["TPH-YOLOv5++: Boosting Object Detection on Drone-Captured Scenarios with Cross-Layer Asymmetric Transformer"](https://www.mdpi.com/2072-4292/15/6/1687).   
-On [VisDrone Challenge 2021](http://aiskyeye.com/), TPH-YOLOv5 wins 4th place and achieves well-matched results with 1st place model.
-![image](result.png)  
-You can get [VisDrone-DET2021: The Vision Meets Drone Object Detection Challenge Results](https://openaccess.thecvf.com/content/ICCV2021W/VisDrone/html/Cao_VisDrone-DET2021_The_Vision_Meets_Drone_Object_Detection_Challenge_Results_ICCVW_2021_paper.html) for more information. The TPH-YOLOv5++, as an improved version, significantly improves inference efficiency and reduces computational costs while maintaining detection performance compared to TPH-YOLOv5.
+This repository implements a drone device designed for hazardous area monitoring, human detection, and automated rescue action requests via wireless communication. The system integrates **YOLOv5s** for human recognition and features robust communication protocols to ensure stable image transmission even in challenging environments. The drone captures images, processes them using YOLOv5s, and identifies humans in danger. The results are displayed locally through a GUI and also transmitted to a web page via HTML protocol for real-time updates.
 
-# Install
+## Features
+- **Drone-Based Human Detection**: Uses YOLOv5s for human detection in images captured in hazardous environments.
+- **Wireless Communication**: Sends image data and detection results to a web server via wireless communication.
+- **Real-Time Display**: Displays detection results locally on a GUI and remotely on a web interface.
+- **Rescue Action Requests**: Based on detection, the drone can send automatic rescue requests for humans in danger.
+- **Stable Image Transmission**: Implements robust communication protocols for stable image transmission even in adverse conditions.
+
+## System Components
+
+1. **Drone**: The physical drone device equipped with a camera for capturing images in hazardous areas.
+2. **YOLOv5s Algorithm**: Deployed on the drone's Intel CPU to perform real-time human detection.
+3. **GUI Interface**: Local display of detection results, integrated with the drone for immediate feedback.
+4. **Web Interface**: A remote interface that allows users to view the results via HTML protocol.
+5. **Communication Protocols**: Developed to ensure reliable transmission of image data over wireless networks.
+
+## Installation
+
+### 1. Clone the repository
 ```bash
-$ git clone https://github.com/cv516Buaa/tph-yolov5
-$ cd tph-yolov5
+$ git clone https://github.com/yourusername/drone-human-detection.git
+$ cd drone-human-detection
+
+## 2. Install Dependencies
+Make sure to install the required Python libraries:
+
+```bash
 $ pip install -r requirements.txt
-```
-# Convert labels
-VisDrone2YOLO_lable.py transfer VisDrone annotiations to yolo labels.  
-You should set the path of VisDrone dataset in VisDrone2YOLO_lable.py first.
-```bash
-$ python VisDrone2YOLO_lable.py
-```
 
-# Inference
-* `Datasets` : [VisDrone](http://aiskyeye.com/download/object-detection-2/), [UAVDT](https://sites.google.com/view/grli-uavdt/%E9%A6%96%E9%A1%B5)
-* `Weights` (PyTorch
-v1.10): 
-    * `yolov5l-xs-1.pt`:  | [Baidu Drive(pw: vibe)](https://pan.baidu.com/s/1APETgMoeCOvZi1GsBZERrg). |  [Google Drive](https://drive.google.com/file/d/1nGeKl3qOa26v3haGSDmLjeA0cjDD9p61/view?usp=sharing) |
-    * `yolov5l-xs-2.pt`:  | [Baidu Drive(pw: vffz)](https://pan.baidu.com/s/19S84EevP86yJIvnv9KYXDA). |  [Google Drive](https://drive.google.com/file/d/1VmORvxNtvMVMvmY7cCwvp0BoL6L3RGiq/view?usp=sharing) |
-    
-val.py runs inference on VisDrone2019-DET-val, using weights trained with TPH-YOLOv5.  
-(We provide two weights trained by two different models based on YOLOv5l.)
+## 3. Convert Labels (If Necessary)
+If you're using your own dataset or a specific format, you may need to convert labels into YOLO format. Follow the example below:
 
 ```bash
-$ python val.py --weights ./weights/yolov5l-xs-1.pt --img 1996 --data ./data/VisDrone.yaml
-                                    yolov5l-xs-2.pt
---augment --save-txt  --save-conf --task val --batch-size 8 --verbose --name v5l-xs
-```
-![image](./images/result_in_VisDrone.png)
-Inference on UAVDT is similar and results of TPH-YOLOv5++ on UAVDT are as follow:
-![image](./images/result_in_UAVDT.png)
+$ python convert_labels.py
+Make sure to set the correct path for your dataset in convert_labels.py
 
-# Ensemble
-If you inference dataset with different models, then you can ensemble the result by weighted boxes fusion using wbf.py.  
-You should set img path and txt path in wbf.py.
+## 4. Run the Drone Detection Script
+Once the setup is complete, you can start the drone-based detection system. This will use the camera to capture images and process them using the YOLOv5s algorithm to detect humans.
+
 ```bash
-$ python wbf.py
-```
+$ python run_drone_detection.py
 
-# Train
-train.py allows you to train new model from strach.
+## 5. View Results
+The system will display detection results both locally (via the GUI) and on a web interface (accessible through any browser).
+
+- **Local Display**: A GUI will open on the drone system showing real-time results.
+- **Web Interface**: View results remotely via a web page by accessing the provided IP address in a browser.
+
+---
+
+## Inference
+The YOLOv5s algorithm will be used to detect humans in the images captured by the drone. You can change the model weights to improve detection accuracy or use pre-trained models for faster inference.
+
+### 1. Weights (PyTorch v1.10):
+Download the pre-trained weights:
+- **weights file**: Google Drive or Baidu Drive
+
+### 2. Run Inference
+Use the following script to run inference using YOLOv5s on captured images.
+
 ```bash
-$ python train.py --img 1536 --adam --batch 4 --epochs 80 --data ./data/VisDrone.yaml --weights yolov5l.pt --hy data/hyps/hyp.VisDrone.yaml --cfg models/yolov5l-xs-tph.yaml --name v5l-xs-tph
-$ python train.py --img 1536 --adam --batch 4 --epochs 80 --data ./data/VisDrone.yaml --weights yolov5l.pt --hy data/hyps/hyp.VisDrone.yaml --cfg models/yolov5l-tph-plus.yaml --name v5l-tph-plus
-```
-![image](train.png)  
+$ python inference.py --weights ./weights/yolov5s.pt --img-size 640 --source ./input_images --save-txt --save-img
 
-# Description of TPH-YOLOv5, TPH-YOLOv5++ and citations
-- https://arxiv.org/abs/2108.11539
-- https://openaccess.thecvf.com/content/ICCV2021W/VisDrone/html/Zhu_TPH-YOLOv5_Improved_YOLOv5_Based_on_Transformer_Prediction_Head_for_Object_ICCVW_2021_paper.html 
-- https://www.mdpi.com/2072-4292/15/6/1687
+Rescue Action System
+When a human is detected in the image, the system will:
 
-If you have any question, please discuss with me by sending email to lyushuchang@buaa.edu.cn or liubinghao@buaa.edu.cn  
-If you find this code useful please cite:
-```
-@InProceedings{Zhu_2021_ICCV,
-    author    = {Zhu, Xingkui and Lyu, Shuchang and Wang, Xu and Zhao, Qi},
-    title     = {TPH-YOLOv5: Improved YOLOv5 Based on Transformer Prediction Head for Object Detection on Drone-Captured Scenarios},
-    booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV) Workshops},
-    month     = {October},
-    year      = {2021},
-    pages     = {2778-2788}
-}
+Trigger an automatic rescue action by sending a request via wireless communication.
+Inform operators about the detected human's location and status.
 
-@Article{rs15061687,
-   AUTHOR = {Zhao, Qi and Liu, Binghao and Lyu, Shuchang and Wang, Chunlei and Zhang, Hong},
-   TITLE = {TPH-YOLOv5++: Boosting Object Detection on Drone-Captured Scenarios with Cross-Layer Asymmetric Transformer},
-   JOURNAL = {Remote Sensing},
-   VOLUME = {15},
-   YEAR = {2023},
-   NUMBER = {6},
-   ARTICLE-NUMBER = {1687},
-   URL = {https://www.mdpi.com/2072-4292/15/6/1687},
-   ISSN = {2072-4292},
-   DOI = {10.3390/rs15061687}
-}
-```
+## License
+This project is licensed under the **GNU General Public License (GPL) v3.0** - see the [LICENSE](LICENSE) file for details.
 
-# References
-Thanks to their great works
-* [ultralytics/yolov5](https://github.com/ultralytics/yolov5)
-* [SwinTransformer](https://github.com/microsoft/Swin-Transformer)
-* [WBF](https://github.com/ZFTurbo/Weighted-Boxes-Fusion)
+---
+
+## References
+- YOLOv5
+- Transformer Prediction Head (TPH) improvements to YOLOv5
+
+---
+
+## Acknowledgments
+Thanks to the authors and contributors of the **YOLOv5** and related research for their pioneering work. If you find this project useful, please cite:
+
+- **TPH-YOLOv5**: Improved YOLOv5 Based on Transformer Prediction Head for Object Detection on Drone-Captured Scenarios
+- **TPH-YOLOv5++**: Boosting Object Detection on Drone-Captured Scenarios with Cross-Layer Asymmetric Transformer
