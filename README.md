@@ -21,26 +21,26 @@ This repository implements a drone device designed for hazardous area monitoring
 ```bash
 $ git clone https://github.com/yourusername/drone-human-detection.git
 $ cd drone-human-detection
-
+```
 ## 2. Install Dependencies
 Make sure to install the required Python libraries:
 
 ```bash
 $ pip install -r requirements.txt
-
+```
 ## 3. Convert Labels (If Necessary)
 If you're using your own dataset or a specific format, you may need to convert labels into YOLO format. Follow the example below:
 
 ```bash
 $ python convert_labels.py
 Make sure to set the correct path for your dataset in convert_labels.py
-
+```
 ## 4. Run the Drone Detection Script
 Once the setup is complete, you can start the drone-based detection system. This will use the camera to capture images and process them using the YOLOv5s algorithm to detect humans.
 
 ```bash
 $ python run_drone_detection.py
-
+```
 ## 5. View Results
 The system will display detection results both locally (via the GUI) and on a web interface (accessible through any browser).
 
@@ -61,7 +61,7 @@ Use the following script to run inference using YOLOv5s on captured images.
 
 ```bash
 $ python inference.py --weights ./weights/yolov5s.pt --img-size 640 --source ./input_images --save-txt --save-img
-
+```
 Rescue Action System
 When a human is detected in the image, the system will:
 
